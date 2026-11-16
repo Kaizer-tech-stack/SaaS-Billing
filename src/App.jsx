@@ -252,6 +252,19 @@ function App() {
     notify(`${invoice.id}: recalculated total is ${money(invoice.total)}.`);
   };
 
+  // Dashboard card navigation
+  const handleDashboardCardClick = (destination) => {
+    setSearch("");
+
+    if (destination === "Customers") {
+      setFilter("Active");
+    } else {
+      setFilter("All");
+    }
+
+    setPage(destination);
+  };
+
   // Render selected page
   const renderPage = () => {
     switch (page) {
@@ -264,6 +277,7 @@ function App() {
             duplicates={duplicates}
             revenue={revenue}
             onVerify={verifyInvoice}
+            onCardClick={handleDashboardCardClick}
           />
         );
 

@@ -3693,3 +3693,28 @@ td {
   color: #f1faf9;
   background-color: #103238;
 }
+
+/* Dashboard statistic cards - clickable interaction */
+
+.dashboard-stat-card {
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(94, 234, 212, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-stat-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.dashboard-stat-card:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 3px;
+}

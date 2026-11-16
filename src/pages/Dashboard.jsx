@@ -20,6 +20,7 @@ function Dashboard({
   duplicates,
   revenue,
   onVerify,
+  onCardClick,
 }) {
   const activeCustomers = customers.filter(
     (customer) => customer.status === "Active",
@@ -47,6 +48,7 @@ function Dashboard({
       icon: CreditCard,
       color: "emerald",
       trend: "Billing overview",
+      destination: "Invoices",
     },
     {
       label: "Active customers",
@@ -55,6 +57,7 @@ function Dashboard({
       icon: Users,
       color: "cyan",
       trend: "Customer accounts",
+      destination: "Customers",
     },
     {
       label: "Usage records",
@@ -63,6 +66,7 @@ function Dashboard({
       icon: Activity,
       color: "violet",
       trend: "Usage activity",
+      destination: "Usage Records",
     },
     {
       label: "Duplicate records",
@@ -71,6 +75,7 @@ function Dashboard({
       icon: CircleAlert,
       color: "orange",
       trend: duplicates.length > 0 ? "Needs attention" : "No issues detected",
+      destination: "Usage Records",
     },
   ];
 
@@ -85,6 +90,16 @@ function Dashboard({
             <article
               className={`dashboard-stat-card ${stat.color}`}
               key={stat.label}
+              role="button"
+              tabIndex={0}
+              aria-label={`Open ${stat.label}`}
+              onClick={() => onCardClick(stat.destination)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onCardClick(stat.destination);
+                }
+              }}
             >
               <div className="dashboard-stat-top">
                 <div className="dashboard-stat-icon">
