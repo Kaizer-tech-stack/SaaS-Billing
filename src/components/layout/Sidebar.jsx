@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  CreditCard,
   LayoutDashboard,
   Users,
   Activity,
@@ -45,13 +44,15 @@ function Sidebar({ page, setPage, nav, duplicates }) {
         onClick={() => setPage("Dashboard")}
         aria-label="Go to Dashboard"
       >
-        <div className="brand-icon">
-          <CreditCard />
-        </div>
+        <img
+          className="brand-icon"
+          src="/bilyntra-icon.webp"
+          alt="Bilyntra logo"
+        />
 
-        <div>
-          <b>Billflow</b>
-          <small>SMART BILLING</small>
+        <div className="brand-text">
+          <b>Bilyntra</b>
+          <small>INTELLIGENT BILLING</small>
         </div>
       </button>
 
@@ -60,6 +61,8 @@ function Sidebar({ page, setPage, nav, duplicates }) {
       <nav>
         {nav.map(([label]) => {
           const Icon = icons[label];
+
+          if (!Icon) return null;
 
           return (
             <button

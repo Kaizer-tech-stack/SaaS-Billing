@@ -4,7 +4,7 @@ import InvoiceTable from "../components/common/InvoiceTable";
 
 function Invoices({ invoices, search, setSearch, onVerify }) {
   return (
-    <section className="panel table-panel">
+    <section className="panel table-panel invoice-register">
       <div className="panel-head-row">
         <PanelTitle
           title="Invoice register"

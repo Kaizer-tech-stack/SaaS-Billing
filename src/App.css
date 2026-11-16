@@ -41,26 +41,48 @@ button {
   gap: 11px;
   padding: 0 8px 38px;
 }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
 .brand-icon {
-  width: 39px;
-  height: 39px;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #5577f4, #7355e8);
-  color: #fff;
-  display: grid;
-  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 12px;
 }
-.brand b {
-  display: block;
-  font: 800 20px Manrope;
-  color: #1d2944;
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-.brand small {
-  display: block;
-  color: #9aa4b6;
+
+.brand-text b {
+  color: #e7ffff;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.brand-text small {
+  color: #61c9bd;
   font-size: 9px;
-  letter-spacing: 1.4px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
 }
+
 .nav-label {
   font-size: 10px;
   letter-spacing: 1.4px;
@@ -1158,11 +1180,6 @@ tbody tr:hover {
   flex-shrink: 0;
 }
 
-/* Table row interaction */
-.invoice-table tbody tr:hover {
-  background: #f9faff;
-}
-
 /* Consistent financial alignment */
 .invoice-table td:nth-child(3),
 .invoice-table td:nth-child(4),
@@ -1416,10 +1433,6 @@ tbody tr:hover {
   color: #263653;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-}
-
-.report-table tbody tr:hover {
-  background: #f8f9fd;
 }
 
 .report-empty {
@@ -3426,4 +3439,257 @@ td {
 /* Chart background */
 .bar-track {
   background: #1b414a;
+}
+
+/* BRAND LOGO */
+.brand-button {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.brand-button:hover {
+  background: rgba(45, 212, 191, 0.07);
+  border-color: rgba(45, 212, 191, 0.15);
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* ADMIN USER */
+.sidebar-bottom {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sidebar-bottom:hover {
+  background: rgba(45, 212, 191, 0.07);
+  border-color: rgba(45, 212, 191, 0.15);
+}
+
+.sidebar-bottom:focus-visible,
+.brand-button:focus-visible {
+  outline: 2px solid #35c9b5;
+  outline-offset: 2px;
+}
+
+/* REPORTS SECTION - HOVER VISIBILITY */
+.reports-page button:hover,
+.reports-page a:hover {
+  color: #5eead4;
+  background-color: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.35);
+}
+
+/* Report cards and panels */
+.reports-page .panel:hover,
+.reports-page .report-card:hover {
+  background-color: #102e32;
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+/* Keep text readable during hover */
+.reports-page button:hover *,
+.reports-page a:hover * {
+  color: inherit;
+}
+
+/* REPORTS AND INVOICES - HOVER FIX */
+.reports-page button:hover,
+.reports-page a:hover,
+.invoices-page button:hover,
+.invoices-page a:hover {
+  color: #5eead4;
+  background-color: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.35);
+}
+
+/* TABLE ROW HOVER */
+.reports-page tr:hover,
+.invoices-page tr:hover {
+  background-color: rgba(45, 212, 191, 0.08);
+}
+
+/* TABLE TEXT VISIBILITY */
+.reports-page tr:hover td,
+.invoices-page tr:hover td {
+  color: #e2f5f3;
+}
+
+/* CARD HOVER */
+.reports-page .panel:hover,
+.reports-page .report-card:hover,
+.invoices-page .panel:hover,
+.invoices-page .invoice-card:hover {
+  background-color: #102e32;
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+/* =========================================
+   BILYNTRA - REPORT & INVOICE TABLE HOVER
+========================================= */
+
+/* Customer Billing Report */
+.customer-billing-report .report-table tbody tr:hover > td {
+  background-color: #16464a !important;
+  color: #e5f5f3 !important;
+}
+
+/* Report customer names and totals */
+.customer-billing-report .report-table tbody tr:hover .report-customer-name,
+.customer-billing-report .report-table tbody tr:hover .report-total {
+  color: #5eead4 !important;
+}
+
+/* Invoice Register */
+.invoice-register .invoice-table tbody tr:hover > td {
+  background-color: #16464a !important;
+  color: #e5f5f3 !important;
+}
+
+/* Invoice ID and customer name */
+.invoice-register .invoice-table tbody tr:hover .invoice-id,
+.invoice-register .invoice-table tbody tr:hover .invoice-customer {
+  color: #5eead4 !important;
+}
+
+/* Invoice amounts */
+.invoice-register .invoice-table tbody tr:hover .invoice-amount,
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #e5f5f3 !important;
+}
+
+/* Preserve status badge colors */
+.customer-billing-report tbody tr:hover .status,
+.invoice-register tbody tr:hover .status {
+  color: inherit;
+}
+
+/* Smooth hover transition */
+.customer-billing-report .report-table td,
+.invoice-register .invoice-table td {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Keep total amounts green on hover */
+
+/* Invoice Register */
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #263653 !important;
+}
+
+/* Customer Billing Report */
+.customer-billing-report .report-table tbody tr:hover .report-total {
+  color: #263653 !important;
+}
+/* Total amount - white on hover */
+.customer-billing-report .report-table tbody tr:hover .report-total,
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #ffffff !important;
+}
+/* Dashboard - Total amount stays white on hover */
+.dashboard-invoices .invoice-table tbody tr:hover .invoice-total {
+  color: #ffffff !important;
+}
+
+/* =========================================
+   BILYNTRA - BILLING FORMULA SIMULATOR
+   Text contrast improvements
+========================================= */
+
+/* Main simulator heading and subtitle */
+.billing-simulator h3,
+.billing-simulator h4 {
+  color: #e6f4f1 !important;
+}
+
+/* Form labels */
+.billing-simulator .simulator-field label {
+  color: #b8d2d3 !important;
+}
+
+/* Plan information labels */
+.billing-simulator .simulator-plan-info span {
+  color: #a9c6ca !important;
+}
+
+/* Plan information values */
+.billing-simulator .simulator-plan-info strong {
+  color: #f1faf9 !important;
+}
+
+/* Current bill, next bill, and billable requests */
+.billing-simulator .simulator-result span,
+.billing-simulator .induction-details span {
+  color: #a9c6ca !important;
+}
+
+.billing-simulator .simulator-result strong,
+.billing-simulator .induction-details strong {
+  color: #f1faf9 !important;
+}
+
+/* Supporting descriptions */
+.billing-simulator .simulator-result small,
+.billing-simulator .induction-check p {
+  color: #a9c6ca !important;
+}
+
+/* Billing formula explanation */
+.billing-simulator .simulator-formula h4 {
+  color: #e6f4f1 !important;
+}
+
+.billing-simulator .simulator-formula p {
+  color: #c3d9d9 !important;
+}
+
+/* Calculated total */
+.billing-simulator .simulator-formula > strong {
+  color: #5eead4 !important;
+}
+
+/* Mathematical induction check */
+.billing-simulator .induction-check h4 {
+  color: #e6f4f1 !important;
+}
+
+/* Actual and expected increase values */
+.billing-simulator .induction-details strong {
+  color: #f1faf9 !important;
+}
+
+/* Inputs */
+.billing-simulator .simulator-field input,
+.billing-simulator .simulator-field select {
+  color: #f1faf9 !important;
+  background-color: #103238 !important;
+  border-color: #245a60 !important;
+}
+
+/* Dropdown options */
+.billing-simulator .simulator-field select option {
+  color: #f1faf9;
+  background-color: #103238;
 }
