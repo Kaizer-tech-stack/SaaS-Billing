@@ -4,9 +4,11 @@ import {
   Activity,
   CircleAlert,
   CheckCircle2,
+  TrendingUp,
+  ShieldCheck,
+  ArrowUpRight,
 } from "lucide-react";
 
-import Stat from "../components/common/Stat";
 import PanelTitle from "../components/common/PanelTitle";
 import InvoiceTable from "../components/common/InvoiceTable";
 import { money } from "../utils/formatters";
@@ -32,111 +34,247 @@ function Dashboard({
     1,
   );
 
+  const integrityPercentage =
+    invoices.length > 0
+      ? Math.round((cleanInvoices / invoices.length) * 100)
+      : 100;
+
+  const stats = [
+    {
+      label: "Total billed",
+      value: money(revenue),
+      note: "Subscription + usage charges",
+      icon: CreditCard,
+      color: "emerald",
+      trend: "Billing overview",
+    },
+    {
+      label: "Active customers",
+      value: activeCustomers,
+      note: "Currently active accounts",
+      icon: Users,
+      color: "cyan",
+      trend: "Customer accounts",
+    },
+    {
+      label: "Usage records",
+      value: usage.length,
+      note: "Recorded usage events",
+      icon: Activity,
+      color: "violet",
+      trend: "Usage activity",
+    },
+    {
+      label: "Duplicate records",
+      value: duplicates.length,
+      note: "Records requiring review",
+      icon: CircleAlert,
+      color: "orange",
+      trend: duplicates.length > 0 ? "Needs attention" : "No issues detected",
+    },
+  ];
+
   return (
-    <>
-      <div className="stats">
-        <Stat
-          icon={<CreditCard />}
-          label="Total billed this month"
-          value={money(revenue)}
-          note="Subscription + usage charges"
-        />
+    <div className="dashboard-page">
+      {/* Dashboard metrics */}
+      <section className="dashboard-stats">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
 
-        <Stat
-          icon={<Users />}
-          label="Active customers"
-          value={activeCustomers}
-          note="Paying accounts"
-        />
-
-        <Stat
-          icon={<Activity />}
-          label="Usage records"
-          value={usage.length}
-          note="Events this period"
-        />
-
-        <Stat
-          icon={<CircleAlert />}
-          label="Duplicate records"
-          value={duplicates.length}
-          note="Require review"
-        />
-      </div>
-
-      <div className="two-col">
-        <section className="panel">
-          <PanelTitle
-            title="Billing overview"
-            sub="Estimated invoice total by customer"
-          />
-
-          <div className="big-number">{money(revenue)}</div>
-
-          <div className="bars">
-            {invoices.map((invoice) => (
-              <div className="bar-col" key={invoice.id}>
-                <span>{money(invoice.total)}</span>
-
-                <div className="bar-track">
-                  <i
-                    style={{
-                      height: `${Math.max(
-                        8,
-                        (invoice.total / maxInvoiceTotal) * 100,
-                      )}%`,
-                    }}
-                  />
+          return (
+            <article
+              className={`dashboard-stat-card ${stat.color}`}
+              key={stat.label}
+            >
+              <div className="dashboard-stat-top">
+                <div className="dashboard-stat-icon">
+                  <Icon size={21} />
                 </div>
 
-                <small>{invoice.customer.name.split(" ")[0]}</small>
+                <span className="dashboard-stat-trend">
+                  <ArrowUpRight size={13} />
+                  {stat.trend}
+                </span>
               </div>
-            ))}
-          </div>
-        </section>
 
-        <section className="panel">
+              <div className="dashboard-stat-info">
+                <span>{stat.label}</span>
+                <h2>{stat.value}</h2>
+                <small>{stat.note}</small>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      {/* Billing overview and invoice integrity */}
+      <section className="dashboard-overview-grid">
+        <article className="dashboard-panel billing-overview">
+          <div className="dashboard-panel-heading">
+            <PanelTitle
+              title="Billing overview"
+              sub="Estimated invoice total by customer"
+            />
+
+            <span className="dashboard-period-label">ALL INVOICES</span>
+          </div>
+
+          <div className="billing-chart-summary">
+            <div>
+              <span>Total billed</span>
+              <h2>{money(revenue)}</h2>
+            </div>
+
+            <div className="billing-chart-indicator">
+              <TrendingUp size={15} />
+              <span>Current total</span>
+            </div>
+          </div>
+
+          {invoices.length > 0 ? (
+            <div className="modern-bar-chart">
+              <div className="chart-y-axis">
+                <span>{money(maxInvoiceTotal)}</span>
+                <span>{money(maxInvoiceTotal * 0.66)}</span>
+                <span>{money(maxInvoiceTotal * 0.33)}</span>
+                <span>$0</span>
+              </div>
+
+              <div className="chart-content">
+                <div className="chart-grid-lines">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </div>
+
+                <div className="chart-bars">
+                  {invoices.map((invoice) => {
+                    const height = Math.max(
+                      5,
+                      (invoice.total / maxInvoiceTotal) * 100,
+                    );
+
+                    return (
+                      <div className="modern-chart-column" key={invoice.id}>
+                        <div className="modern-chart-value">
+                          {money(invoice.total)}
+                        </div>
+
+                        <div className="modern-bar-track">
+                          <div
+                            className="modern-bar-fill"
+                            style={{ height: `${height}%` }}
+                            title={`${invoice.customer.name}: ${money(invoice.total)}`}
+                          />
+                        </div>
+
+                        <span className="modern-chart-label">
+                          {invoice.customer.name.split(" ")[0]}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="dashboard-empty-chart">
+              No invoice data available yet.
+            </div>
+          )}
+
+          <div className="chart-footer">
+            <span>
+              <i className="chart-legend-dot" />
+              Invoice totals
+            </span>
+            <small>Based on current customer usage and plans</small>
+          </div>
+        </article>
+
+        <article className="dashboard-panel integrity-panel">
+          <div className="dashboard-panel-heading">
+            <PanelTitle
+              title="Invoice integrity"
+              sub="Automated verification checks"
+            />
+
+            <div className="integrity-shield">
+              <ShieldCheck size={22} />
+            </div>
+          </div>
+
+          <div className="integrity-content">
+            <div
+              className="modern-integrity-ring"
+              style={{
+                background: `conic-gradient(#16d6ad ${integrityPercentage}%, #123e49 ${integrityPercentage}% 100%)`,
+              }}
+            >
+              <div className="modern-integrity-inner">
+                <strong>
+                  {cleanInvoices}/{invoices.length}
+                </strong>
+                <span>Clean</span>
+              </div>
+            </div>
+
+            <div className="integrity-description">
+              <h4>Verification summary</h4>
+              <p>
+                Invoices are recalculated from recorded usage. Duplicate event
+                IDs are excluded from billing totals.
+              </p>
+            </div>
+          </div>
+
+          <div className="integrity-check-list">
+            <div className="modern-integrity-check">
+              <CheckCircle2 size={17} />
+              <span>Duplicate detection enabled</span>
+              <b>Active</b>
+            </div>
+
+            <div className="modern-integrity-check">
+              <CheckCircle2 size={17} />
+              <span>Usage-based billing calculated</span>
+              <b>Active</b>
+            </div>
+
+            <div
+              className={`modern-integrity-check ${
+                duplicates.length > 0 ? "integrity-warning" : ""
+              }`}
+            >
+              {duplicates.length > 0 ? (
+                <CircleAlert size={17} />
+              ) : (
+                <CheckCircle2 size={17} />
+              )}
+              <span>Duplicate record review</span>
+              <b>{duplicates.length > 0 ? "Review" : "Clear"}</b>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      {/* Recent invoices */}
+      <section className="dashboard-panel dashboard-invoices">
+        <div className="dashboard-invoices-heading">
           <PanelTitle
-            title="Invoice integrity"
-            sub="Automated verification checks"
+            title="Recent invoices"
+            sub="Calculated billing records for all customers"
           />
 
-          <div className="integrity">
-            <div className="ring">
-              {cleanInvoices}/{invoices.length}
-              <small>clean</small>
-            </div>
-
-            <div>
-              <b>Verification summary</b>
-              <p>
-                Invoices are independently recalculated from raw usage.
-                Duplicate event IDs are excluded from billing totals.
-              </p>
-
-              <div className="integrity-check">
-                <CheckCircle2 size={15} />
-                Duplicate detection enabled
-              </div>
-
-              <div className="integrity-check">
-                <CheckCircle2 size={15} />
-                Usage-based billing calculated
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <section className="panel table-panel">
-        <PanelTitle
-          title="Recent invoices"
-          sub="Calculated billing records for all customers"
-        />
+          <span className="invoice-count">
+            {invoices.length} {invoices.length === 1 ? "invoice" : "invoices"}
+          </span>
+        </div>
 
         <InvoiceTable invoices={invoices} onVerify={onVerify} />
       </section>
-    </>
+    </div>
   );
 }
 
