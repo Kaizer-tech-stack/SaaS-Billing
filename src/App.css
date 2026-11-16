@@ -3311,3 +3311,119 @@ textarea::placeholder {
     font-size: 8px;
   }
 }
+
+/* =========================================
+   BILLFLOW - DARK THEME TEXT VISIBILITY
+========================================= */
+
+/* Main text */
+body {
+  color: #e6f4f5;
+}
+
+/* Main headings */
+.page-head h1,
+.panel-title h3,
+.stat h2,
+.big-number,
+.brand b,
+.sidebar-bottom b {
+  color: #f1fbfc;
+}
+
+/* Normal readable text */
+.page-head p,
+.panel-title p,
+.integrity p,
+.integrity b,
+td,
+.breakdown-info,
+.health-row span,
+.report-table td {
+  color: #c0d5da;
+}
+
+/* Secondary text - still readable */
+.stat-top,
+.stat > small,
+.subline,
+.topbar,
+.topbar-date,
+.nav-label,
+.sidebar-bottom small {
+  color: #91b0b8;
+}
+
+/* Sidebar navigation */
+.nav-item {
+  color: #b8d0d5;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: #ffffff;
+}
+
+/* Table headings */
+th {
+  color: #a9c7ce;
+}
+
+/* Input text */
+input,
+select,
+textarea {
+  color: #e6f4f5;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #829da5;
+  opacity: 1;
+}
+
+/* Invoice and customer text */
+td b,
+.invoice-table .invoice-customer,
+.report-table .report-customer-name {
+  color: #f1fbfc;
+}
+
+/* Chart labels */
+.bar-col > span,
+.bar-col small {
+  color: #a9c7ce;
+}
+
+/* Improve smaller text readability */
+.stat-top,
+.stat > small,
+.page-head p,
+.panel-title p,
+.subline,
+.health-row,
+.integrity p {
+  font-size: 11px;
+}
+
+/* Better card separation */
+.panel,
+.stat {
+  background: #102e36;
+  border-color: #20515b;
+}
+
+/* Table header */
+thead {
+  background: #153943;
+}
+
+/* Table separators */
+td {
+  border-top-color: #214650;
+}
+
+/* Chart background */
+.bar-track {
+  background: #1b414a;
+}
