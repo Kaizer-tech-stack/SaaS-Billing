@@ -11,6 +11,8 @@ function UsageRecords({
   duplicates,
   search,
   setSearch,
+  usageFilter,
+  setUsageFilter,
   onEditUsage,
   onViewUsage,
 }) {
@@ -31,7 +33,18 @@ function UsageRecords({
             sub="Raw usage events received this billing period"
           />
 
-          <SearchBox value={search} onChange={setSearch} />
+          <div className="usage-toolbar">
+            <select
+              value={usageFilter}
+              onChange={(event) => setUsageFilter(event.target.value)}
+              aria-label="Filter usage records"
+            >
+              <option value="All">All Records</option>
+              <option value="Duplicates">Duplicates Only</option>
+            </select>
+
+            <SearchBox value={search} onChange={setSearch} />
+          </div>
         </div>
 
         <div className="table-scroll">

@@ -75,7 +75,7 @@ function Dashboard({
       icon: CircleAlert,
       color: "orange",
       trend: duplicates.length > 0 ? "Needs attention" : "No issues detected",
-      destination: "Usage Records",
+      destination: "Duplicates",
     },
   ];
 

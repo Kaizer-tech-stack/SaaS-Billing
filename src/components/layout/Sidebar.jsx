@@ -8,6 +8,7 @@ import {
   UserRound,
   Settings,
   ShieldCheck,
+  FlaskConical,
 } from "lucide-react";
 
 function Sidebar({ page, setPage, nav, duplicates }) {
@@ -20,6 +21,7 @@ function Sidebar({ page, setPage, nav, duplicates }) {
     "Usage Records": Activity,
     Invoices: FileText,
     Reports: BarChart3,
+    "Algorithm Lab": FlaskConical,
   };
 
   useEffect(() => {

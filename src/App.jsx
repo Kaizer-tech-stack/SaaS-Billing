@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Users,
   X,
+  FlaskConical,
 } from "lucide-react";
 
 import "./App.css";
@@ -31,6 +32,7 @@ import Customers from "./pages/Customers";
 import UsageRecords from "./pages/UsageRecords";
 import Invoices from "./pages/Invoices";
 import Reports from "./pages/Reports";
+import AlgorithmLab from "./pages/AlgorithmLab";
 
 // Modals
 import RecordModal from "./components/modals/RecordModal";
@@ -49,6 +51,8 @@ function App() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedUsage, setSelectedUsage] = useState(null);
   const [toast, setToast] = useState("");
+
+  const [usageFilter, setUsageFilter] = useState("All");
 
   // Generate invoices automatically
   const invoices = useMemo(
@@ -225,6 +229,7 @@ function App() {
     ["Usage Records", Activity],
     ["Invoices", FileText],
     ["Reports", BarChart3],
+    ["Algorithm Lab", FlaskConical],
   ];
 
   // Filter customers
@@ -247,6 +252,14 @@ function App() {
       .includes(search.toLowerCase());
   });
 
+  const displayedUsage = filteredUsage.filter((record) => {
+    if (usageFilter === "Duplicates") {
+      return duplicates.some((duplicate) => duplicate.id === record.id);
+    }
+
+    return true;
+  });
+
   // Verify invoice
   const verifyInvoice = (invoice) => {
     notify(`${invoice.id}: recalculated total is ${money(invoice.total)}.`);
@@ -260,6 +273,16 @@ function App() {
       setFilter("Active");
     } else {
       setFilter("All");
+    }
+
+    if (destination === "Usage Records") {
+      setUsageFilter("All");
+    }
+
+    if (destination === "Duplicates") {
+      setUsageFilter("Duplicates");
+      setPage("Usage Records");
+      return;
     }
 
     setPage(destination);
@@ -296,11 +319,13 @@ function App() {
       case "Usage Records":
         return (
           <UsageRecords
-            usage={filteredUsage}
+            usage={displayedUsage}
             customers={customers}
             duplicates={duplicates}
             search={search}
             setSearch={setSearch}
+            usageFilter={usageFilter}
+            setUsageFilter={setUsageFilter}
             onEditUsage={editUsage}
             onViewUsage={viewUsage}
           />
@@ -330,6 +355,9 @@ function App() {
             revenue={revenue}
           />
         );
+
+      case "Algorithm Lab":
+        return <AlgorithmLab customers={customers} usage={usage} />;
 
       default:
         return <div>Page not found.</div>;
