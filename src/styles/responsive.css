@@ -1,0 +1,388 @@
+/* Bilyntra responsive and accessibility media queries */
+
+@media (max-width: 1050px) {
+  .sidebar {
+    width: 215px;
+  }
+  .main {
+    margin-left: 215px;
+  }
+  .content {
+    padding: 27px 22px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 740px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    padding: 14px;
+    border-right: 0;
+    border-bottom: 1px solid #e9edf4;
+  }
+  .brand {
+    padding: 0 5px 12px;
+  }
+  .nav-label,
+  .sidebar-note,
+  .admin {
+    display: none;
+  }
+  .sidebar {
+    display: block;
+  }
+  .sidebar .nav-item {
+    display: inline-flex;
+    padding: 9px;
+    margin: 2px;
+  }
+  .main {
+    margin: 0;
+  }
+  .topbar {
+    height: 55px;
+    padding: 0 15px;
+  }
+  .content {
+    padding: 22px 14px;
+  }
+  .page-head {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+  .two-col,
+  .reports {
+    grid-template-columns: 1fr;
+  }
+  .panel-head-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .search input {
+    width: 130px;
+  }
+}
+
+/* Responsive improvements */
+
+@media (max-width: 1050px) {
+  .content {
+    padding: 28px 24px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 740px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .topbar {
+    position: static;
+  }
+
+  .content {
+    padding: 20px 15px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal {
+    width: calc(100% - 24px);
+    max-width: 100%;
+    margin: 12px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .report-panel {
+    padding: 16px;
+  }
+
+  .report-table-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .export-report-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .simulator-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .simulator-plan-info,
+  .simulator-results,
+  .induction-details {
+    grid-template-columns: 1fr;
+  }
+
+  .induction-check {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .induction-step-card {
+    gap: 10px;
+  }
+
+  .induction-equation {
+    font-size: 12px;
+  }
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .reports-grid > .report-panel:nth-child(1),
+  .reports-grid > .report-panel:nth-child(2),
+  .reports-grid > .report-panel:nth-child(3) {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .induction-explanation {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .induction-explanation {
+    grid-template-columns: 1fr;
+  }
+
+  .report-panel {
+    padding: 15px;
+  }
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 740px) {
+  .sidebar-bottom-wrapper {
+    display: none;
+  }
+
+  .dropdown-menu {
+    width: min(310px, calc(100vw - 25px));
+  }
+
+  .profile-menu {
+    width: min(245px, calc(100vw - 25px));
+  }
+
+  .topbar-right {
+    gap: 10px;
+  }
+
+  .topbar-date {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .dropdown-panel {
+    width: min(310px, calc(100vw - 30px));
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 740px) {
+  .sidebar {
+    background: #002d32;
+    border-color: var(--dark-border);
+  }
+}
+
+/* Responsive dashboard */
+
+@media (max-width: 1100px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-page {
+    gap: 14px;
+  }
+
+  .dashboard-stats {
+    gap: 10px;
+  }
+
+  .dashboard-stat-card {
+    padding: 14px;
+  }
+
+  .dashboard-stat-info h2 {
+    font-size: 20px;
+  }
+
+  .dashboard-stat-trend {
+    font-size: 8px;
+  }
+
+  .billing-overview,
+  .integrity-panel {
+    padding: 15px;
+  }
+
+  .integrity-content {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .modern-integrity-ring {
+    width: 85px;
+    height: 85px;
+  }
+
+  .modern-integrity-inner {
+    width: 69px;
+    height: 69px;
+  }
+
+  .modern-integrity-inner strong {
+    font-size: 17px;
+  }
+
+  .dashboard-invoices-heading {
+    padding: 0 14px 13px;
+  }
+
+  .modern-chart-value {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .usage-toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .usage-toolbar select {
+    flex: 1;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .algorithm-result-grid,
+  .counting-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .algorithm-intro {
+    padding: 18px;
+  }
+
+  .algorithm-panel {
+    padding: 15px;
+  }
+
+  .algorithm-tabs {
+    flex-direction: column;
+  }
+
+  .algorithm-tabs button {
+    justify-content: center;
+  }
+
+  .algorithm-result-grid,
+  .counting-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .algorithm-invoice-result > div {
+    align-items: flex-start;
+  }
+
+  .algorithm-invoice-result span,
+  .algorithm-invoice-result strong {
+    font-size: 12px;
+  }
+
+  .configuration-item {
+    grid-template-columns: 25px 1fr 1fr;
+  }
+
+  .configuration-item > span:last-child {
+    grid-column: 2 / -1;
+  }
+
+  .configuration-item.excluded {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 750px) {
+  .test-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

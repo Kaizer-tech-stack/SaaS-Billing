@@ -51,9 +51,9 @@ export const plans = {
       },
 
       Transactions: {
-        enabled: false,
-        included: 0,
-        rate: 0,
+        enabled: true,
+        included: 25000,
+        rate: 0.005,
         unit: "transactions",
       },
     },
@@ -76,16 +76,16 @@ export const plans = {
       },
 
       "Storage (GB)": {
-        enabled: false,
-        included: 0,
-        rate: 0,
+        enabled: true,
+        included: 500,
+        rate: 0.1,
         unit: "GB",
       },
 
       Transactions: {
-        enabled: false,
-        included: 0,
-        rate: 0,
+        enabled: true,
+        included: 100000,
+        rate: 0.003,
         unit: "transactions",
       },
     },

@@ -39,6 +39,7 @@ export function calculateRequestsRecursively(records, index = 0) {
   return Number(quantity) + calculateRequestsRecursively(records, index + 1);
 }
 
+// Algorithm 2: Flexible multi-metric billing
 export function buildInvoice(customer, records) {
   if (!customer || typeof customer !== "object") {
     throw new TypeError("A valid customer is required.");
@@ -64,6 +65,7 @@ export function buildInvoice(customer, records) {
   ) {
     throw new TypeError("Each usage record must be a valid object.");
   }
+
   const plan = plans[customer.plan];
 
   if (!plan) {
@@ -74,7 +76,7 @@ export function buildInvoice(customer, records) {
     (record) => record.customerId === customer.id,
   );
 
-  // Remove duplicate event IDs (case-insensitive)
+  // Remove duplicate event IDs (case-insensitive).
   const seen = new Set();
 
   const unique = customerRecords.filter((record) => {
@@ -86,24 +88,54 @@ export function buildInvoice(customer, records) {
     return true;
   });
 
-  // Only API request records are billable
-  const apiRecords = unique.filter(
-    (record) => record.metric === "API requests",
-  );
+  const metricBreakdown = {};
+  let usageCharge = 0;
+  let invalidCount = 0;
+  let requests = 0;
 
-  // Exclude invalid quantities from billing
-  const validApiRecords = apiRecords.filter((record) =>
-    isValidQuantity(record.quantity),
-  );
+  // Calculate every enabled metric in the selected plan.
+  for (const [metricName, config] of Object.entries(plan.metrics || {})) {
+    if (!config.enabled) continue;
 
-  const invalidCount = apiRecords.length - validApiRecords.length;
+    const metricRecords = unique.filter(
+      (record) => record.metric === metricName,
+    );
 
-  // Recursive calculation
-  const requests = calculateRequestsRecursively(validApiRecords);
+    // Exclude invalid quantities from billing.
+    const validRecords = metricRecords.filter((record) =>
+      isValidQuantity(record.quantity),
+    );
 
-  // Billing formula: B(n) = F + r max(0, n - I)
-  const billable = Math.max(0, requests - plan.included);
-  const usageCharge = billable * plan.rate;
+    invalidCount += metricRecords.length - validRecords.length;
+
+    // Preserve recursive API request accumulation.
+    const quantity =
+      metricName === "API requests"
+        ? calculateRequestsRecursively(validRecords)
+        : validRecords.reduce(
+            (total, record) => total + Number(record.quantity),
+            0,
+          );
+
+    if (metricName === "API requests") {
+      requests = quantity;
+    }
+
+    const billable = Math.max(0, quantity - config.included);
+    const charge = billable * config.rate;
+
+    usageCharge += charge;
+
+    metricBreakdown[metricName] = {
+      enabled: true,
+      quantity,
+      included: config.included,
+      billable,
+      rate: config.rate,
+      unit: config.unit,
+      charge,
+    };
+  }
 
   return {
     subscription: plan.fee,
@@ -112,9 +144,11 @@ export function buildInvoice(customer, records) {
     duplicateCount: customerRecords.length - unique.length,
     invalidCount,
     requests,
+    metricBreakdown,
   };
 }
 
+// Algorithm 3: Duplicate usage detection
 export function findDuplicates(usage) {
   const seen = new Set();
 
@@ -131,12 +165,10 @@ export function findDuplicates(usage) {
 
     seen.add(eventId);
     return true;
-
-    seen.add(eventId);
-    return false;
   });
 }
 
+// Algorithm 4: Invoice generation
 export function generateInvoices(customers, usage) {
   return customers.map((customer, index) => ({
     id: `INV-2026-${1101 + index}`,

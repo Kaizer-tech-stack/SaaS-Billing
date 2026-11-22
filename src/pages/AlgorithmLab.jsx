@@ -28,17 +28,34 @@ const TEST_CUSTOMER = {
   status: "Active",
 };
 
-function createTestRecord(eventId, quantity, metric = "API requests") {
+function createTestCustomer(plan) {
+  return {
+    id: `CUS-TEST-${plan.toUpperCase()}`,
+    name: `${plan} Test Customer`,
+    plan,
+    status: "Active",
+  };
+}
+
+function createTestRecord(
+  eventId,
+  quantity,
+  metric = "API requests",
+  customerId = TEST_CUSTOMER.id,
+) {
   return {
     id: `TEST-${eventId}`,
     eventId,
-    customerId: TEST_CUSTOMER.id,
+    customerId,
     metric,
     quantity,
   };
 }
 
 function runBillingTests() {
+  const growthCustomer = createTestCustomer("Growth");
+  const enterpriseCustomer = createTestCustomer("Enterprise");
+
   const cases = [
     {
       name: "Empty usage records",
@@ -124,11 +141,11 @@ function runBillingTests() {
       },
     },
     {
-      name: "Non-API metric excluded",
-      input: "5,000 API requests + 50,000 storage units",
+      name: "Disabled metric excluded",
+      input: "5,000 API requests + 50,000 storage units on Starter",
       records: [
         createTestRecord("EVT-008", 5000),
-        createTestRecord("EVT-009", 50000, "Storage GB"),
+        createTestRecord("EVT-009", 50000, "Storage (GB)"),
       ],
       expected: {
         requests: 5000,
@@ -137,10 +154,52 @@ function runBillingTests() {
         invalidCount: 0,
       },
     },
+    {
+      name: "Growth multi-metric billing",
+      input: "145,000 API requests + 30,000 transactions",
+      customer: growthCustomer,
+      records: [
+        createTestRecord("EVT-010", 145000, "API requests", growthCustomer.id),
+        createTestRecord("EVT-011", 30000, "Transactions", growthCustomer.id),
+      ],
+      expected: {
+        requests: 145000,
+        total: 171.5,
+        duplicateCount: 0,
+        invalidCount: 0,
+      },
+    },
+    {
+      name: "Enterprise multi-metric billing",
+      input: "1,250,000 API + 600 GB storage + 120,000 transactions",
+      customer: enterpriseCustomer,
+      records: [
+        createTestRecord(
+          "EVT-012",
+          1250000,
+          "API requests",
+          enterpriseCustomer.id,
+        ),
+        createTestRecord("EVT-013", 600, "Storage (GB)", enterpriseCustomer.id),
+        createTestRecord(
+          "EVT-014",
+          120000,
+          "Transactions",
+          enterpriseCustomer.id,
+        ),
+      ],
+      expected: {
+        requests: 1250000,
+        total: 569,
+        duplicateCount: 0,
+        invalidCount: 0,
+      },
+    },
   ];
 
   return cases.map((test) => {
-    const actual = buildInvoice(TEST_CUSTOMER, test.records);
+    const customer = test.customer || TEST_CUSTOMER;
+    const actual = buildInvoice(customer, test.records);
 
     const passed =
       actual.requests === test.expected.requests &&
@@ -266,6 +325,10 @@ function runCountingTests() {
   });
 }
 
+// ==========================================
+// ALGORITHM LAB COMPONENT
+// ==========================================
+
 function AlgorithmLab({ customers, usage }) {
   const [activeTab, setActiveTab] = useState("billing");
 
@@ -304,10 +367,12 @@ function AlgorithmLab({ customers, usage }) {
 
   const selectedPlan = selectedCustomer ? plans[selectedCustomer.plan] : null;
 
-  const billableRequests =
-    selectedPlan && invoice
-      ? Math.max(0, invoice.requests - selectedPlan.included)
-      : 0;
+  // Read the dynamic metric breakdown returned by the billing service.
+  const metricEntries = Object.entries(invoice?.metricBreakdown || {}).filter(
+    ([, metric]) => metric.enabled,
+  );
+
+  const apiBreakdown = invoice?.metricBreakdown?.["API requests"];
 
   // Fundamental Counting Principle state
   const planNames = Object.keys(plans);
@@ -374,6 +439,7 @@ function AlgorithmLab({ customers, usage }) {
 
   return (
     <div className="algorithm-lab">
+      {/* Algorithm introduction */}
       <section className="algorithm-intro">
         <div>
           <span className="algorithm-eyebrow">BILYNTRA COMPUTATION CENTER</span>
@@ -382,109 +448,107 @@ function AlgorithmLab({ customers, usage }) {
             Explore the mathematical algorithms powering subscription billing
             and configuration analysis.
           </p>
+        </div>
+      </section>
 
-          {/* Algorithm Testing and Validation */}
-          <section className="panel algorithm-panel algorithm-testing-panel">
-            <PanelTitle
-              title="Algorithm Testing & Validation"
-              sub="Automated test execution for both mathematical algorithms"
-            />
+      {/* Algorithm Testing and Validation */}
+      <section className="panel algorithm-panel algorithm-testing-panel">
+        <PanelTitle
+          title="Algorithm Testing & Validation"
+          sub="Automated test execution for both mathematical algorithms"
+        />
 
-            <div className="test-summary">
-              <div className="test-summary-card">
-                <span>Total test cases</span>
-                <strong>{allTests.length}</strong>
-              </div>
+        <div className="test-summary">
+          <div className="test-summary-card">
+            <span>Total test cases</span>
+            <strong>{allTests.length}</strong>
+          </div>
 
-              <div className="test-summary-card">
-                <span>Passed</span>
-                <strong className="test-passed">{passedTests}</strong>
-              </div>
+          <div className="test-summary-card">
+            <span>Passed</span>
+            <strong className="test-passed">{passedTests}</strong>
+          </div>
 
-              <div className="test-summary-card">
-                <span>Failed</span>
-                <strong className="test-failed">{failedTests}</strong>
-              </div>
+          <div className="test-summary-card">
+            <span>Failed</span>
+            <strong className="test-failed">{failedTests}</strong>
+          </div>
 
-              <div className="test-summary-card">
-                <span>Success rate</span>
-                <strong>
-                  {allTests.length
-                    ? ((passedTests / allTests.length) * 100).toFixed(1)
-                    : "0.0"}
-                  %
-                </strong>
+          <div className="test-summary-card">
+            <span>Success rate</span>
+            <strong>
+              {allTests.length
+                ? ((passedTests / allTests.length) * 100).toFixed(1)
+                : "0.0"}
+              %
+            </strong>
+          </div>
+        </div>
+
+        {["Recursive Billing", "Counting Principle"].map((algorithm) => {
+          const tests = allTests.filter((test) => test.algorithm === algorithm);
+
+          return (
+            <div className="test-group" key={algorithm}>
+              <h4>{algorithm}</h4>
+
+              <div className="table-scroll">
+                <table className="algorithm-test-table">
+                  <thead>
+                    <tr>
+                      <th>Test case</th>
+                      <th>Input</th>
+                      <th>Expected output</th>
+                      <th>Actual output</th>
+                      <th>Result</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {tests.map((test, index) => (
+                      <tr key={`${algorithm}-${test.name}`}>
+                        <td>
+                          <b>TC-{index + 1}</b>
+                          <small>{test.name}</small>
+                        </td>
+
+                        <td>{test.input}</td>
+
+                        <td>{test.expected}</td>
+
+                        <td>{test.actual}</td>
+
+                        <td>
+                          <span
+                            className={
+                              test.passed
+                                ? "test-status passed"
+                                : "test-status failed"
+                            }
+                          >
+                            {test.passed ? "PASS" : "FAIL"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
+          );
+        })}
 
-            {["Recursive Billing", "Counting Principle"].map((algorithm) => {
-              const tests = allTests.filter(
-                (test) => test.algorithm === algorithm,
-              );
-
-              return (
-                <div className="test-group" key={algorithm}>
-                  <h4>{algorithm}</h4>
-
-                  <div className="table-scroll">
-                    <table className="algorithm-test-table">
-                      <thead>
-                        <tr>
-                          <th>Test case</th>
-                          <th>Input</th>
-                          <th>Expected output</th>
-                          <th>Actual output</th>
-                          <th>Result</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {tests.map((test, index) => (
-                          <tr key={`${algorithm}-${test.name}`}>
-                            <td>
-                              <b>TC-{index + 1}</b>
-                              <small>{test.name}</small>
-                            </td>
-
-                            <td>{test.input}</td>
-
-                            <td>{test.expected}</td>
-
-                            <td>{test.actual}</td>
-
-                            <td>
-                              <span
-                                className={
-                                  test.passed
-                                    ? "test-status passed"
-                                    : "test-status failed"
-                                }
-                              >
-                                {test.passed ? "PASS" : "FAIL"}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              );
-            })}
-
-            <div className="test-methodology">
-              <h4>Testing methodology</h4>
-              <p>
-                Each test supplies a predefined input to the actual algorithm
-                implementation. The resulting output is compared with an
-                independently specified expected result.
-              </p>
-              <p>
-                A test passes only when all checked output values match. These
-                tests execute automatically when the Algorithm Lab loads.
-              </p>
-            </div>
-          </section>
+        <div className="test-methodology">
+          <h4>Testing methodology</h4>
+          <p>
+            Each test supplies a predefined input to the actual algorithm
+            implementation. The resulting output is compared with an
+            independently specified expected result.
+          </p>
+          <p>
+            A test passes only when all checked output values match. These tests
+            execute automatically when the Algorithm Lab loads.
+          </p>
         </div>
       </section>
 
@@ -513,8 +577,8 @@ function AlgorithmLab({ customers, usage }) {
         <div className="algorithm-content">
           <section className="panel algorithm-panel">
             <PanelTitle
-              title="Recursive Billing Engine"
-              sub="Calculate actual customer invoices using recursive API usage accumulation"
+              title="Flexible Billing Engine"
+              sub="Calculate customer invoices using recursive API accumulation and plan-specific usage metrics"
             />
 
             <div className="algorithm-formula">
@@ -522,8 +586,9 @@ function AlgorithmLab({ customers, usage }) {
               <strong>T(0) = 0</strong>
               <strong>T(k) = T(k - 1) + qₖ</strong>
               <p>
-                Each valid API usage record contributes its request quantity to
-                the cumulative total.
+                Valid API usage records are accumulated recursively. Other
+                enabled usage metrics are calculated separately using their
+                configured allowances and rates.
               </p>
             </div>
 
@@ -556,13 +621,13 @@ function AlgorithmLab({ customers, usage }) {
               <>
                 <div className="algorithm-result-grid">
                   <div className="algorithm-result-card">
-                    <span>Valid API requests</span>
-                    <strong>{invoice.requests.toLocaleString()}</strong>
+                    <span>Enabled billing metrics</span>
+                    <strong>{metricEntries.length}</strong>
                   </div>
 
                   <div className="algorithm-result-card">
-                    <span>Billable requests</span>
-                    <strong>{billableRequests.toLocaleString()}</strong>
+                    <span>Valid API requests</span>
+                    <strong>{invoice.requests.toLocaleString()}</strong>
                   </div>
 
                   <div className="algorithm-result-card">
@@ -571,7 +636,7 @@ function AlgorithmLab({ customers, usage }) {
                   </div>
 
                   <div className="algorithm-result-card">
-                    <span>Invalid API records</span>
+                    <span>Invalid usage records</span>
                     <strong>{invoice.invalidCount}</strong>
                   </div>
                 </div>
@@ -593,7 +658,7 @@ function AlgorithmLab({ customers, usage }) {
                   </div>
 
                   <div>
-                    <span>Usage charge</span>
+                    <span>Total usage charges</span>
                     <strong>{money(invoice.usageCharge)}</strong>
                   </div>
 
@@ -607,60 +672,99 @@ function AlgorithmLab({ customers, usage }) {
                   <h4>Calculation breakdown</h4>
 
                   <p>
-                    Total valid requests: {invoice.requests.toLocaleString()}
+                    The billing engine calculates each enabled metric
+                    independently. Usage within the included allowance is not
+                    charged. Only usage above the allowance generates an
+                    additional charge.
                   </p>
 
-                  <p>
-                    Included requests: {selectedPlan.included.toLocaleString()}
-                  </p>
+                  {metricEntries.length > 0 ? (
+                    metricEntries.map(([metricName, metric]) => (
+                      <div className="metric-breakdown" key={metricName}>
+                        <h4>{metricName}</h4>
 
-                  <p>
-                    Billable requests: max(0,{" "}
-                    {invoice.requests.toLocaleString()} -{" "}
-                    {selectedPlan.included.toLocaleString()}) ={" "}
-                    {billableRequests.toLocaleString()}
-                  </p>
+                        <p>
+                          Total usage: {metric.quantity.toLocaleString()}{" "}
+                          {metric.unit}
+                        </p>
 
-                  <p>
-                    Usage charge: {billableRequests.toLocaleString()} ×{" "}
-                    {selectedPlan.rate} = {money(invoice.usageCharge)}
-                  </p>
+                        <p>
+                          Included allowance: {metric.included.toLocaleString()}{" "}
+                          {metric.unit}
+                        </p>
 
-                  <strong>
-                    Final bill: {money(selectedPlan.fee)} +{" "}
-                    {money(invoice.usageCharge)} = {money(invoice.total)}
-                  </strong>
+                        <p>
+                          Billable usage: max(0,{" "}
+                          {metric.quantity.toLocaleString()} -{" "}
+                          {metric.included.toLocaleString()}) ={" "}
+                          {metric.billable.toLocaleString()} {metric.unit}
+                        </p>
+
+                        <p>
+                          Rate: ${Number(metric.rate).toString()} per{" "}
+                          {metric.unit}
+                        </p>
+
+                        <strong>
+                          Usage charge: {metric.billable.toLocaleString()} × $
+                          {Number(metric.rate).toString()} ={" "}
+                          {money(metric.charge)}
+                        </strong>
+                      </div>
+                    ))
+                  ) : (
+                    <p>
+                      No enabled billing metrics are configured for this plan.
+                    </p>
+                  )}
+
+                  <div className="metric-breakdown">
+                    <h4>Final invoice calculation</h4>
+
+                    <p>Monthly subscription: {money(selectedPlan.fee)}</p>
+
+                    <p>Total usage charges: {money(invoice.usageCharge)}</p>
+
+                    <strong>
+                      Final bill: {money(selectedPlan.fee)} +{" "}
+                      {money(invoice.usageCharge)} = {money(invoice.total)}
+                    </strong>
+                  </div>
                 </div>
 
-                <div className="algorithm-proof">
-                  <h4>
-                    <CheckCircle2 size={17} />
-                    Structural Induction Explanation
-                  </h4>
+                {apiBreakdown && (
+                  <div className="algorithm-proof">
+                    <h4>
+                      <CheckCircle2 size={17} />
+                      Structural Induction Explanation
+                    </h4>
 
-                  <p>
-                    <b>Base Case:</b> If the usage record list is empty, there
-                    are no API requests to accumulate. Therefore, T(0) = 0.
-                  </p>
+                    <p>
+                      <b>Base Case:</b> If the API usage record list is empty,
+                      there are no API requests to accumulate. Therefore, T(0) =
+                      0.
+                    </p>
 
-                  <p>
-                    <b>Inductive Hypothesis:</b> Assume that the recursive
-                    function correctly calculates the total API requests from
-                    the first k valid usage records.
-                  </p>
+                    <p>
+                      <b>Inductive Hypothesis:</b> Assume that the recursive
+                      function correctly calculates the total API requests from
+                      the first k valid usage records.
+                    </p>
 
-                  <p>
-                    <b>Inductive Step:</b> When another valid usage record is
-                    added, its quantity is added to the previous total: T(k + 1)
-                    = T(k) + qₖ₊₁.
-                  </p>
+                    <p>
+                      <b>Inductive Step:</b> When another valid API usage record
+                      is added, its quantity is added to the previous total: T(k
+                      + 1) = T(k) + qₖ₊₁.
+                    </p>
 
-                  <p>
-                    <b>Conclusion:</b> By structural induction, the recursive
-                    definition correctly accumulates the API request quantities
-                    for every finite list of valid usage records.
-                  </p>
-                </div>
+                    <p>
+                      <b>Conclusion:</b> By structural induction, the recursive
+                      definition correctly accumulates the API request
+                      quantities for every finite list of valid API usage
+                      records.
+                    </p>
+                  </div>
+                )}
               </>
             ) : (
               <div className="algorithm-empty">

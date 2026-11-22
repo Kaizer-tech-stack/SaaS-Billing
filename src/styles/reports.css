@@ -1,0 +1,1054 @@
+/* Bilyntra reports, analytics, billing simulator, and induction styles */
+
+.reports {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.reports h2 {
+  font: 800 24px Manrope;
+  color: #1d2944;
+  margin: 22px 0 5px;
+}
+
+.reports p {
+  font-size: 10px;
+  color: #929caf;
+}
+
+/* 
+   BILLFLOW - INVOICE TABLE
+ */
+
+.invoice-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Invoice ID */
+
+.invoice-table .invoice-id {
+  color: #5268d7;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1px;
+}
+
+/* Customer name */
+
+.invoice-table .invoice-customer {
+  color: #34415e;
+  font-weight: 600;
+}
+
+/* Subscription and usage amounts */
+
+.invoice-table .invoice-amount {
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Total amount */
+
+.invoice-table .invoice-total {
+  color: #263653;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Verify button */
+
+.invoice-table .verify {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+  min-height: 34px;
+
+  border: 1px solid #dce3ff;
+  border-radius: 8px;
+
+  background: #f7f8ff;
+  color: #4966e9;
+
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.invoice-table .verify:hover {
+  background: #4966e9;
+  border-color: #4966e9;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(73, 102, 233, 0.15);
+}
+
+.invoice-table .verify:active {
+  transform: scale(0.96);
+}
+
+.invoice-table .verify svg {
+  flex-shrink: 0;
+}
+
+/* Consistent financial alignment */
+
+.invoice-table td:nth-child(3),
+.invoice-table td:nth-child(4),
+.invoice-table td:nth-child(5) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 
+   BILLFLOW - REPORTS & ANALYTICS
+ */
+
+.reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Analytics panels */
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.report-panel {
+  padding: 20px;
+  min-width: 0;
+}
+
+.report-panel .panel-title {
+  margin-bottom: 20px;
+}
+
+/* Subscription breakdown */
+
+.report-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.breakdown-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 9px 14px;
+  align-items: center;
+}
+
+.breakdown-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.breakdown-info b {
+  color: #34415e;
+  font-weight: 700;
+}
+
+.report-progress {
+  width: 100%;
+  height: 7px;
+  background: #edf0f7;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.breakdown-item .report-progress {
+  grid-column: 1;
+}
+
+.report-progress-fill {
+  height: 100%;
+  background: #5268d7;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.breakdown-percentage {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  text-align: right;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.health-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f2f7;
+  font-size: 12px;
+}
+
+.health-row:last-child {
+  border-bottom: none;
+}
+
+.health-row span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #64748b;
+}
+
+.health-row b {
+  color: #263653;
+  font-size: 13px;
+}
+
+.health-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.health-dot.neutral {
+  background: #94a3b8;
+}
+
+.health-dot.success {
+  background: #10b981;
+}
+
+.health-dot.danger {
+  background: #f87171;
+}
+
+.health-dot.warning {
+  background: #f59e0b;
+}
+
+/* Usage analytics */
+
+.usage-analytics {
+  width: 100%;
+}
+
+.usage-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.usage-breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.usage-breakdown-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.usage-breakdown-heading div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.usage-breakdown-heading b {
+  color: #34415e;
+  font-size: 12px;
+}
+
+.usage-breakdown-heading span {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.usage-breakdown-heading strong {
+  color: #263653;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Customer billing report */
+
+.customer-billing-report {
+  overflow: hidden;
+}
+
+.report-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 20px 20px 16px;
+}
+
+.report-table-header .panel-title {
+  margin-bottom: 0;
+}
+
+.export-report-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid #dce3ff;
+  border-radius: 8px;
+  background: #f7f8ff;
+  color: #4966e9;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-report-btn:hover:not(:disabled) {
+  background: #4966e9;
+  border-color: #4966e9;
+  color: white;
+}
+
+.export-report-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table .report-customer-name {
+  color: #34415e;
+  font-weight: 700;
+}
+
+.report-table .report-total {
+  color: #263653;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-empty {
+  padding: 25px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* Billing Formula Simulator */
+
+.billing-simulator {
+  margin-bottom: 22px;
+}
+
+.simulator-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 22px 0;
+}
+
+.simulator-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.simulator-field label {
+  color: #526078;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.simulator-field select,
+.simulator-field input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+  background: #fff;
+  color: #26334a;
+  font: inherit;
+  outline: none;
+}
+
+.simulator-field select:focus,
+.simulator-field input:focus {
+  border-color: #5268d7;
+  box-shadow: 0 0 0 3px rgba(82, 104, 215, 0.1);
+}
+
+.simulator-plan-info,
+.simulator-results,
+.induction-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.simulator-plan-info > div,
+.simulator-result,
+.induction-details > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 15px;
+  border: 1px solid #edf0f5;
+  border-radius: 9px;
+  background: #fafbfe;
+}
+
+.simulator-plan-info span,
+.simulator-result span,
+.induction-details span {
+  color: #7a8498;
+  font-size: 11px;
+}
+
+.simulator-plan-info strong,
+.simulator-result strong,
+.induction-details strong {
+  color: #29364d;
+  font-size: 16px;
+}
+
+.simulator-results {
+  margin-top: 16px;
+}
+
+.simulator-result strong {
+  font-size: 21px;
+}
+
+.simulator-result small {
+  color: #8993a5;
+  font-size: 11px;
+}
+
+.simulator-formula {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #e7eaf2;
+  border-radius: 10px;
+  background: #f8f9fc;
+}
+
+.simulator-formula h4,
+.induction-check h4 {
+  margin: 0 0 10px;
+  color: #29364d;
+  font-size: 14px;
+}
+
+.simulator-formula p {
+  margin: 8px 0;
+  color: #647087;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.simulator-formula strong {
+  display: block;
+  margin-top: 12px;
+  color: #5268d7;
+  font-size: 15px;
+}
+
+.induction-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.induction-check p {
+  margin: 0;
+  color: #7a8498;
+  font-size: 12px;
+}
+
+.induction-details {
+  margin-top: 12px;
+}
+
+/* Mathematical Induction Explanation */
+
+.induction-explanation {
+  margin-bottom: 22px;
+}
+
+.induction-intro {
+  margin: 18px 0;
+}
+
+.induction-intro p,
+.induction-step-card p,
+.induction-conclusion p {
+  color: #748097;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.induction-general-formula {
+  margin-top: 12px;
+  padding: 15px;
+  border: 1px solid #e5e9f2;
+  border-radius: 8px;
+  background: #f8f9fc;
+  color: #5268d7;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.induction-step-card {
+  display: flex;
+  gap: 15px;
+  padding: 18px 0;
+  border-top: 1px solid #edf0f5;
+}
+
+.induction-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #eef1ff;
+  color: #5268d7;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.induction-step-card h4 {
+  margin: 2px 0 8px;
+  color: #29364d;
+  font-size: 14px;
+}
+
+.induction-equation {
+  margin: 9px 0;
+  padding: 11px 13px;
+  border-radius: 7px;
+  background: #f8f9fc;
+  color: #5268d7;
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.induction-step-card strong {
+  display: block;
+  margin: 12px 0;
+  color: #29364d;
+  font-size: 14px;
+}
+
+.induction-conclusion {
+  margin-top: 10px;
+  padding: 17px;
+  border-left: 3px solid #5268d7;
+  border-radius: 7px;
+  background: #f5f6ff;
+}
+
+.induction-conclusion strong {
+  color: #354bba;
+  font-size: 14px;
+}
+
+.induction-conclusion p {
+  margin-bottom: 0;
+}
+
+/* 
+   REPORTS PAGE - COMPACT LAYOUT
+ */
+
+.reports-page {
+  gap: 14px;
+}
+
+/* Arrange the three analytics panels */
+
+.reports-grid {
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* Subscription breakdown - top left */
+
+.reports-grid > .report-panel:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* Billing health - top right */
+
+.reports-grid > .report-panel:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Mathematical induction - full width below */
+
+.reports-grid > .induction-explanation {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.report-panel {
+  padding: 17px;
+}
+
+.report-panel .panel-title {
+  margin-bottom: 14px;
+}
+
+/* Subscription breakdown */
+
+.report-breakdown {
+  gap: 14px;
+}
+
+/* Billing health */
+
+.health-row {
+  padding: 9px 0;
+}
+
+/* Mathematical induction: three proof steps side by side */
+
+.induction-explanation {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 16px;
+  align-items: start;
+  margin-bottom: 0;
+}
+
+.induction-explanation > .panel-title,
+.induction-intro,
+.induction-conclusion {
+  grid-column: 1 / -1;
+}
+
+.induction-intro {
+  margin: 8px 0 12px;
+}
+
+.induction-general-formula {
+  margin-top: 8px;
+  padding: 12px;
+}
+
+.induction-step-card {
+  gap: 10px;
+  padding: 12px 0;
+  min-width: 0;
+}
+
+.induction-step-card > div {
+  min-width: 0;
+}
+
+.induction-equation {
+  margin: 7px 0;
+  padding: 9px 10px;
+  font-size: 12px;
+}
+
+.induction-step-card strong {
+  margin: 9px 0;
+}
+
+.induction-conclusion {
+  margin-top: 8px;
+  padding: 13px;
+}
+
+/* Remove unnecessary extra spacing */
+
+.billing-simulator {
+  margin-bottom: 0;
+}
+
+/* Dashboard cards and panels */
+
+.panel,
+.stat,
+.report-panel,
+.table-panel {
+  background: linear-gradient(145deg, #002d35, #00232c);
+  border: 1px solid var(--dark-border);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+.report-progress {
+  background: #073b45;
+}
+
+.report-progress-fill {
+  background: linear-gradient(90deg, #00a995, #00e0bd);
+}
+
+/* Simulator and induction */
+
+.simulator-plan-info > div,
+.simulator-result,
+.induction-details > div,
+.simulator-formula,
+.induction-general-formula,
+.induction-equation {
+  background: #052f39;
+  border-color: var(--dark-border);
+  color: var(--text-main);
+}
+
+.simulator-plan-info strong,
+.simulator-result strong,
+.induction-details strong,
+.induction-step-card h4,
+.induction-step-card strong {
+  color: #e8f7fb;
+}
+
+.simulator-plan-info span,
+.simulator-result span,
+.induction-details span,
+.induction-intro p,
+.induction-step-card p {
+  color: var(--text-muted);
+}
+
+.induction-step-card {
+  border-color: var(--dark-border);
+}
+
+.induction-step-number {
+  background: #07534f;
+  color: #50e5d0;
+}
+
+.induction-conclusion {
+  background: #053d3e;
+  border-color: #00bfa6;
+}
+
+.induction-conclusion strong {
+  color: #4de5d0;
+}
+
+/* Form fields */
+
+input,
+select,
+textarea,
+.simulator-field input,
+.simulator-field select,
+.modal input,
+.modal select {
+  background: #052f39;
+  border-color: var(--dark-border);
+  color: #ffffff;
+}
+
+/* Empty states */
+
+.empty,
+.report-empty {
+  color: var(--text-muted);
+}
+
+/* Normal readable text */
+
+.page-head p,
+.panel-title p,
+.integrity p,
+.integrity b,
+td,
+.breakdown-info,
+.health-row span,
+.report-table td {
+  color: #c0d5da;
+}
+
+/* Invoice and customer text */
+
+td b,
+.invoice-table .invoice-customer,
+.report-table .report-customer-name {
+  color: #f1fbfc;
+}
+
+/* Improve smaller text readability */
+
+.stat-top,
+.stat > small,
+.page-head p,
+.panel-title p,
+.subline,
+.health-row,
+.integrity p {
+  font-size: 11px;
+}
+
+/* REPORTS SECTION - HOVER VISIBILITY */
+
+.reports-page button:hover,
+.reports-page a:hover {
+  color: #5eead4;
+  background-color: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.35);
+}
+
+/* Report cards and panels */
+
+.reports-page .panel:hover,
+.reports-page .report-card:hover {
+  background-color: #102e32;
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+/* Keep text readable during hover */
+
+.reports-page button:hover *,
+.reports-page a:hover * {
+  color: inherit;
+}
+
+/* REPORTS AND INVOICES - HOVER FIX */
+
+.reports-page button:hover,
+.reports-page a:hover,
+.invoices-page button:hover,
+.invoices-page a:hover {
+  color: #5eead4;
+  background-color: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.35);
+}
+
+/* TABLE ROW HOVER */
+
+.reports-page tr:hover,
+.invoices-page tr:hover {
+  background-color: rgba(45, 212, 191, 0.08);
+}
+
+/* TABLE TEXT VISIBILITY */
+
+.reports-page tr:hover td,
+.invoices-page tr:hover td {
+  color: #e2f5f3;
+}
+
+/* CARD HOVER */
+
+.reports-page .panel:hover,
+.reports-page .report-card:hover,
+.invoices-page .panel:hover,
+.invoices-page .invoice-card:hover {
+  background-color: #102e32;
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+/* 
+   BILYNTRA - REPORT & INVOICE TABLE HOVER
+ */
+/* Customer Billing Report */
+
+.customer-billing-report .report-table tbody tr:hover > td {
+  background-color: #16464a !important;
+  color: #e5f5f3 !important;
+}
+
+/* Report customer names and totals */
+
+.customer-billing-report .report-table tbody tr:hover .report-customer-name,
+.customer-billing-report .report-table tbody tr:hover .report-total {
+  color: #5eead4 !important;
+}
+
+/* Invoice Register */
+
+.invoice-register .invoice-table tbody tr:hover > td {
+  background-color: #16464a !important;
+  color: #e5f5f3 !important;
+}
+
+/* Invoice ID and customer name */
+
+.invoice-register .invoice-table tbody tr:hover .invoice-id,
+.invoice-register .invoice-table tbody tr:hover .invoice-customer {
+  color: #5eead4 !important;
+}
+
+/* Invoice amounts */
+
+.invoice-register .invoice-table tbody tr:hover .invoice-amount,
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #e5f5f3 !important;
+}
+
+/* Preserve status badge colors */
+
+.customer-billing-report tbody tr:hover .status,
+.invoice-register tbody tr:hover .status {
+  color: inherit;
+}
+
+/* Smooth hover transition */
+
+.customer-billing-report .report-table td,
+.invoice-register .invoice-table td {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Keep total amounts green on hover */
+/* Invoice Register */
+
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #263653 !important;
+}
+
+/* Customer Billing Report */
+
+.customer-billing-report .report-table tbody tr:hover .report-total {
+  color: #263653 !important;
+}
+
+/* Total amount - white on hover */
+
+.customer-billing-report .report-table tbody tr:hover .report-total,
+.invoice-register .invoice-table tbody tr:hover .invoice-total {
+  color: #ffffff !important;
+}
+
+/* Dashboard - Total amount stays white on hover */
+
+.dashboard-invoices .invoice-table tbody tr:hover .invoice-total {
+  color: #ffffff !important;
+}
+
+/* 
+   BILYNTRA - BILLING FORMULA SIMULATOR
+   Text contrast improvements
+ */
+/* Main simulator heading and subtitle */
+
+.billing-simulator h3,
+.billing-simulator h4 {
+  color: #e6f4f1 !important;
+}
+
+/* Form labels */
+
+.billing-simulator .simulator-field label {
+  color: #b8d2d3 !important;
+}
+
+/* Plan information labels */
+
+.billing-simulator .simulator-plan-info span {
+  color: #a9c6ca !important;
+}
+
+/* Plan information values */
+
+.billing-simulator .simulator-plan-info strong {
+  color: #f1faf9 !important;
+}
+
+/* Current bill, next bill, and billable requests */
+
+.billing-simulator .simulator-result span,
+.billing-simulator .induction-details span {
+  color: #a9c6ca !important;
+}
+
+.billing-simulator .simulator-result strong,
+.billing-simulator .induction-details strong {
+  color: #f1faf9 !important;
+}
+
+/* Supporting descriptions */
+
+.billing-simulator .simulator-result small,
+.billing-simulator .induction-check p {
+  color: #a9c6ca !important;
+}
+
+/* Billing formula explanation */
+
+.billing-simulator .simulator-formula h4 {
+  color: #e6f4f1 !important;
+}
+
+.billing-simulator .simulator-formula p {
+  color: #c3d9d9 !important;
+}
+
+/* Calculated total */
+
+.billing-simulator .simulator-formula > strong {
+  color: #5eead4 !important;
+}
+
+/* Mathematical induction check */
+
+.billing-simulator .induction-check h4 {
+  color: #e6f4f1 !important;
+}
+
+/* Actual and expected increase values */
+
+.billing-simulator .induction-details strong {
+  color: #f1faf9 !important;
+}
+
+/* Inputs */
+
+.billing-simulator .simulator-field input,
+.billing-simulator .simulator-field select {
+  color: #f1faf9 !important;
+  background-color: #103238 !important;
+  border-color: #245a60 !important;
+}
+
+/* Dropdown options */
+
+.billing-simulator .simulator-field select option {
+  color: #f1faf9;
+  background-color: #103238;
+}
+/* Reports - Statistic Value Visibility */
+
+.reports-page .stat h2 {
+  color: #f1fbfc !important;
+  font-weight: 800;
+}

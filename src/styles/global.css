@@ -1,0 +1,38 @@
+/* Bilyntra global reset and base styles */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+/* 
+   BILLFLOW - UI POLISH & INTERACTIONS
+ */
+/* Global improvements */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--text-main);
+}
+
+/* 
+   BILLFLOW - DARK THEME TEXT VISIBILITY
+ */
+/* Main text */
+
+body {
+  color: #e6f4f5;
+}

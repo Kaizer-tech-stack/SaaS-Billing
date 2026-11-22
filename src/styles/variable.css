@@ -1,35 +1,43 @@
+/* Bilyntra design tokens and font imports */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+
 :root {
-  /* Brand */
+  font-family: "DM Sans", sans-serif;
+  color: #26334f;
+  background: #f5f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+   BILLFLOW - MIDNIGHT EMERALD THEME
+ */
+
+:root {
+  --primary: #00bfa6;
+  --primary-dark: #008f83;
+  --sidebar-bg: #003b3b;
+  --sidebar-hover: #075653;
+  --page-bg: #f3f8fa;
+  --text-main: #172b3a;
+  --text-muted: #8193a3;
+  --border: #e4edf0;
+}
+
+/* 
+   BILLFLOW - COMPLETE DARK FINTECH THEME
+ */
+
+:root {
   --primary: #00c9b4;
   --primary-dark: #009f91;
-  --primary-light: #5eead4;
-
-  /* Backgrounds */
   --dark-bg: #001b22;
   --dark-surface: #00262e;
-  --dark-card: #102e36;
-  --dark-hover: #16464a;
-
-  /* Borders */
-  --dark-border: #20515b;
-
-  /* Typography */
+  --dark-card: #002c35;
+  --dark-hover: #06404a;
+  --dark-border: #07515a;
   --text-main: #e8f7fb;
+  --text-muted: #8db6c5;
   --text-soft: #b7d4df;
-  --text-muted: #91b0b8;
-
-  /* Status colors */
-  --success: #4de5bb;
-  --warning: #ffad68;
-  --danger: #fb7185;
-
-  /* Effects */
-  --shadow-card: 0 5px 20px rgba(0, 0, 0, 0.12);
-  --radius-sm: 7px;
-  --radius-md: 10px;
-  --radius-lg: 13px;
-
-  /* Typography */
-  --font-body: "DM Sans", sans-serif;
-  --font-heading: "Manrope", sans-serif;
 }
