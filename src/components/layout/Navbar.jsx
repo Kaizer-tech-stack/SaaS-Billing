@@ -7,9 +7,10 @@ import {
   CheckCircle2,
   AlertTriangle,
   X,
+  Menu,
 } from "lucide-react";
 
-function Navbar({ page, duplicates = [] }) {
+function Navbar({ page, duplicates = [], onMenuClick, isMobileSidebarOpen }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -18,6 +19,21 @@ function Navbar({ page, duplicates = [] }) {
   return (
     <header className="topbar">
       <div className="topbar-left">
+        <button
+          className="mobile-menu-btn"
+          type="button"
+          onClick={onMenuClick}
+          aria-label={
+            isMobileSidebarOpen
+              ? "Close navigation menu"
+              : "Open navigation menu"
+          }
+          aria-expanded={isMobileSidebarOpen}
+          aria-controls="app-sidebar"
+        >
+          {isMobileSidebarOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+
         <span>Workspace</span>
         <span className="breadcrumb-divider">/</span>
         <b>{page}</b>
@@ -48,10 +64,12 @@ function Navbar({ page, duplicates = [] }) {
                   <b>Notifications</b>
                   <small>Your billing activity</small>
                 </div>
+
                 <button
                   className="dropdown-close"
                   onClick={() => setShowNotifications(false)}
                   aria-label="Close notifications"
+                  type="button"
                 >
                   <X size={16} />
                 </button>
@@ -60,6 +78,7 @@ function Navbar({ page, duplicates = [] }) {
               {hasDuplicates ? (
                 <div className="notification-item warning">
                   <AlertTriangle size={19} />
+
                   <div>
                     <b>Duplicate records detected</b>
                     <p>
@@ -98,6 +117,7 @@ function Navbar({ page, duplicates = [] }) {
             <div className="dropdown-panel profile-panel">
               <div className="profile-info">
                 <span className="avatar profile-avatar">AD</span>
+
                 <div>
                   <b>Admin User</b>
                   <small>Administrator</small>
@@ -117,6 +137,7 @@ function Navbar({ page, duplicates = [] }) {
               <button
                 className="profile-close"
                 onClick={() => setShowProfile(false)}
+                type="button"
               >
                 Close
               </button>

@@ -9,9 +9,17 @@ import {
   Settings,
   ShieldCheck,
   FlaskConical,
+  X,
 } from "lucide-react";
 
-function Sidebar({ page, setPage, nav, duplicates }) {
+function Sidebar({
+  page,
+  setPage,
+  nav,
+  duplicates,
+  isMobileSidebarOpen,
+  onClose,
+}) {
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef(null);
 
@@ -38,8 +46,40 @@ function Sidebar({ page, setPage, nav, duplicates }) {
     };
   }, []);
 
+  // Close mobile menu when Escape is pressed
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === "Escape" && isMobileSidebarOpen) {
+        onClose();
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isMobileSidebarOpen, onClose]);
+
   return (
-    <aside className="sidebar">
+    <aside
+      id="app-sidebar"
+      className={`sidebar ${isMobileSidebarOpen ? "mobile-open" : ""}`}
+      aria-label="Main navigation"
+    >
+      <div className="mobile-sidebar-header">
+        <span>MENU</span>
+
+        <button
+          className="mobile-sidebar-close"
+          type="button"
+          onClick={onClose}
+          aria-label="Close navigation menu"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
       <button
         className="brand brand-button"
         type="button"
@@ -72,6 +112,7 @@ function Sidebar({ page, setPage, nav, duplicates }) {
               className={`nav-item ${page === label ? "active" : ""}`}
               onClick={() => setPage(label)}
               type="button"
+              aria-current={page === label ? "page" : undefined}
             >
               <Icon size={18} />
               <span>{label}</span>

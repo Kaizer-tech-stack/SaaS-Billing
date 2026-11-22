@@ -10,8 +10,6 @@ import {
   FlaskConical,
 } from "lucide-react";
 
-import "./App.css";
-
 // Data
 import { seedCustomers, seedUsage } from "./data/seedData";
 
@@ -40,6 +38,7 @@ import RecordModal from "./components/modals/RecordModal";
 function App() {
   // Main application state
   const [page, setPage] = useState("Dashboard");
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [customers, setCustomers] = useState(seedCustomers);
   const [usage, setUsage] = useState(seedUsage);
@@ -130,7 +129,6 @@ function App() {
   };
 
   // Add a new usage record
-
   const addUsage = (e) => {
     e.preventDefault();
 
@@ -188,8 +186,6 @@ function App() {
     const data = new FormData(e.currentTarget);
     const eventId = data.get("eventId").trim();
 
-    // Check whether another record already uses this event ID
-    //This prevents EVT_001 and evt_001 from being treated as different event IDs.
     const duplicate = usage.some(
       (record) =>
         record.id !== selectedUsage.id &&
@@ -231,6 +227,13 @@ function App() {
     ["Reports", BarChart3],
     ["Algorithm Lab", FlaskConical],
   ];
+
+  // Handle navigation
+  const handleNavigation = (nextPage) => {
+    setPage(nextPage);
+    setSearch("");
+    setIsMobileSidebarOpen(false);
+  };
 
   // Filter customers
   const filteredCustomers = customers.filter(
@@ -282,10 +285,12 @@ function App() {
     if (destination === "Duplicates") {
       setUsageFilter("Duplicates");
       setPage("Usage Records");
+      setIsMobileSidebarOpen(false);
       return;
     }
 
     setPage(destination);
+    setIsMobileSidebarOpen(false);
   };
 
   // Render selected page
@@ -368,16 +373,29 @@ function App() {
     <div className="layout">
       <Sidebar
         page={page}
-        setPage={(nextPage) => {
-          setPage(nextPage);
-          setSearch("");
-        }}
+        setPage={handleNavigation}
         nav={nav}
         duplicates={duplicates}
+        isMobileSidebarOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
       />
 
+      {isMobileSidebarOpen && (
+        <button
+          className="sidebar-overlay"
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
+
       <main className="main">
-        <Navbar page={page} duplicates={duplicates} />
+        <Navbar
+          page={page}
+          duplicates={duplicates}
+          onMenuClick={() => setIsMobileSidebarOpen((previous) => !previous)}
+          isMobileSidebarOpen={isMobileSidebarOpen}
+        />
 
         <section className="content">
           <PageHeader
@@ -403,7 +421,6 @@ function App() {
       )}
 
       {/* Customer and usage modal */}
-
       {modal && (
         <RecordModal
           modal={modal}

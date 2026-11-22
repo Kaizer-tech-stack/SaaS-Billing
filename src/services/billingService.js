@@ -157,14 +157,14 @@ export function findDuplicates(usage) {
       .trim()
       .toLowerCase();
 
-    // Keep records without an event ID.
-    // Their uniqueness cannot be established.
-    if (!eventId) return true;
+    // Records without event IDs cannot be confirmed as duplicates.
+    if (!eventId) return false;
 
-    if (seen.has(eventId)) return false;
+    // Return only repeated event IDs.
+    if (seen.has(eventId)) return true;
 
     seen.add(eventId);
-    return true;
+    return false;
   });
 }
 
