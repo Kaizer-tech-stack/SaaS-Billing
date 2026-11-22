@@ -1,0 +1,35 @@
+:root {
+  /* Brand */
+  --primary: #00c9b4;
+  --primary-dark: #009f91;
+  --primary-light: #5eead4;
+
+  /* Backgrounds */
+  --dark-bg: #001b22;
+  --dark-surface: #00262e;
+  --dark-card: #102e36;
+  --dark-hover: #16464a;
+
+  /* Borders */
+  --dark-border: #20515b;
+
+  /* Typography */
+  --text-main: #e8f7fb;
+  --text-soft: #b7d4df;
+  --text-muted: #91b0b8;
+
+  /* Status colors */
+  --success: #4de5bb;
+  --warning: #ffad68;
+  --danger: #fb7185;
+
+  /* Effects */
+  --shadow-card: 0 5px 20px rgba(0, 0, 0, 0.12);
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 13px;
+
+  /* Typography */
+  --font-body: "DM Sans", sans-serif;
+  --font-heading: "Manrope", sans-serif;
+}
