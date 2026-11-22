@@ -1,9 +1,27 @@
 import { plans } from "../data/plans";
 
+function isValidQuantity(value) {
+  if (typeof value !== "number" && typeof value !== "string") {
+    return false;
+  }
+
+  if (typeof value === "string" && value.trim() === "") {
+    return false;
+  }
+
+  const quantity = Number(value);
+
+  return Number.isSafeInteger(quantity) && quantity >= 0;
+}
+
 // Algorithm 1: Recursive API request accumulation
 export function calculateRequestsRecursively(records, index = 0) {
   if (!Array.isArray(records)) {
     throw new TypeError("Records must be an array.");
+  }
+
+  if (!Number.isSafeInteger(index) || index < 0) {
+    throw new RangeError("Index must be a non-negative safe integer.");
   }
 
   // Base case
@@ -11,17 +29,41 @@ export function calculateRequestsRecursively(records, index = 0) {
     return 0;
   }
 
-  const quantity = Number(records[index].quantity);
+  const quantity = records[index]?.quantity;
 
-  if (!Number.isSafeInteger(quantity) || quantity < 0) {
+  if (!isValidQuantity(quantity)) {
     throw new RangeError("Usage quantity must be a non-negative safe integer.");
   }
 
   // Recursive case
-  return quantity + calculateRequestsRecursively(records, index + 1);
+  return Number(quantity) + calculateRequestsRecursively(records, index + 1);
 }
 
 export function buildInvoice(customer, records) {
+  if (!customer || typeof customer !== "object") {
+    throw new TypeError("A valid customer is required.");
+  }
+
+  if (
+    customer.id === undefined ||
+    customer.id === null ||
+    String(customer.id).trim() === ""
+  ) {
+    throw new Error("Customer ID is required.");
+  }
+
+  if (!Array.isArray(records)) {
+    throw new TypeError("Usage records must be an array.");
+  }
+
+  if (
+    records.some(
+      (record) =>
+        !record || typeof record !== "object" || Array.isArray(record),
+    )
+  ) {
+    throw new TypeError("Each usage record must be a valid object.");
+  }
   const plan = plans[customer.plan];
 
   if (!plan) {
@@ -50,11 +92,9 @@ export function buildInvoice(customer, records) {
   );
 
   // Exclude invalid quantities from billing
-  const validApiRecords = apiRecords.filter((record) => {
-    const quantity = Number(record.quantity);
-
-    return Number.isSafeInteger(quantity) && quantity >= 0;
-  });
+  const validApiRecords = apiRecords.filter((record) =>
+    isValidQuantity(record.quantity),
+  );
 
   const invalidCount = apiRecords.length - validApiRecords.length;
 
@@ -79,9 +119,18 @@ export function findDuplicates(usage) {
   const seen = new Set();
 
   return usage.filter((record) => {
-    const eventId = String(record.eventId || "").toLowerCase();
+    const eventId = String(record.eventId ?? "")
+      .trim()
+      .toLowerCase();
 
-    if (seen.has(eventId)) return true;
+    // Keep records without an event ID.
+    // Their uniqueness cannot be established.
+    if (!eventId) return true;
+
+    if (seen.has(eventId)) return false;
+
+    seen.add(eventId);
+    return true;
 
     seen.add(eventId);
     return false;

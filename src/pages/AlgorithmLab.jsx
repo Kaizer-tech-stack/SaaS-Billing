@@ -13,7 +13,7 @@ import { analyzeConfigurations } from "../utils/configurationAnalyzer";
 import { money } from "../utils/formatters";
 import PanelTitle from "../components/common/PanelTitle";
 
-const BILLING_CYCLES = ["Monthly", "Annually"];
+const BILLING_CYCLES = ["Monthly"];
 
 const PAYMENT_METHODS = ["Credit / Debit Card", "E-wallet", "Bank Transfer"];
 
@@ -182,14 +182,14 @@ function runCountingTests() {
   const cases = [
     {
       name: "All combinations supported",
-      input: "3 plans × 2 cycles × 3 methods",
+      input: "3 plans × 1 cycle × 3 methods",
       args: {
         planNames: Object.keys(plans),
         billingCycles: BILLING_CYCLES,
         paymentMethods: PAYMENT_METHODS,
         compatibility: allCompatible,
       },
-      expected: { totalPossible: 18, validCount: 18, invalidCount: 0 },
+      expected: { totalPossible: 9, validCount: 9, invalidCount: 0 },
     },
     {
       name: "One payment option disabled",
@@ -200,7 +200,7 @@ function runCountingTests() {
         paymentMethods: PAYMENT_METHODS,
         compatibility: oneDisabled,
       },
-      expected: { totalPossible: 18, validCount: 16, invalidCount: 2 },
+      expected: { totalPossible: 9, validCount: 8, invalidCount: 1 },
     },
     {
       name: "All Starter methods disabled",
@@ -211,22 +211,22 @@ function runCountingTests() {
         paymentMethods: PAYMENT_METHODS,
         compatibility: starterDisabled,
       },
-      expected: { totalPossible: 18, validCount: 12, invalidCount: 6 },
+      expected: { totalPossible: 9, validCount: 6, invalidCount: 3 },
     },
     {
       name: "Only one payment method",
-      input: "3 plans × 2 cycles × 1 method",
+      input: "3 plans × 1 cycle × 1 method",
       args: {
         planNames: Object.keys(plans),
         billingCycles: BILLING_CYCLES,
         paymentMethods: ["E-wallet"],
         compatibility: allCompatible,
       },
-      expected: { totalPossible: 6, validCount: 6, invalidCount: 0 },
+      expected: { totalPossible: 3, validCount: 3, invalidCount: 0 },
     },
     {
       name: "No available payment methods",
-      input: "3 plans × 2 cycles × 0 methods",
+      input: "3 plans × 1 cycle × 0 methods",
       args: {
         planNames: Object.keys(plans),
         billingCycles: BILLING_CYCLES,
@@ -244,7 +244,7 @@ function runCountingTests() {
         paymentMethods: PAYMENT_METHODS,
         compatibility: noCompatibleMethods,
       },
-      expected: { totalPossible: 18, validCount: 0, invalidCount: 18 },
+      expected: { totalPossible: 9, validCount: 0, invalidCount: 9 },
     },
   ];
 
@@ -278,11 +278,29 @@ function AlgorithmLab({ customers, usage }) {
     (customer) => customer.id === selectedCustomerId,
   );
 
-  const invoice = useMemo(() => {
-    if (!selectedCustomer) return null;
+  const invoiceResult = useMemo(() => {
+    if (!selectedCustomer) {
+      return {
+        invoice: null,
+        error: "Please select a customer.",
+      };
+    }
 
-    return buildInvoice(selectedCustomer, usage);
+    try {
+      return {
+        invoice: buildInvoice(selectedCustomer, usage),
+        error: null,
+      };
+    } catch (error) {
+      return {
+        invoice: null,
+        error: error.message || "Unable to calculate the invoice.",
+      };
+    }
   }, [selectedCustomer, usage]);
+
+  const invoice = invoiceResult.invoice;
+  const invoiceError = invoiceResult.error;
 
   const selectedPlan = selectedCustomer ? plans[selectedCustomer.plan] : null;
 
@@ -310,7 +328,7 @@ function AlgorithmLab({ customers, usage }) {
         paymentMethods: PAYMENT_METHODS,
         compatibility,
       }),
-    [compatibility],
+    [planNames, compatibility],
   );
 
   const testResults = useMemo(
@@ -516,7 +534,12 @@ function AlgorithmLab({ customers, usage }) {
                 id="algorithm-customer"
                 value={selectedCustomerId}
                 onChange={(event) => setSelectedCustomerId(event.target.value)}
+                disabled={customers.length === 0}
               >
+                <option value="" disabled>
+                  Select a customer
+                </option>
+
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
                     {customer.name} — {customer.plan}
@@ -525,7 +548,11 @@ function AlgorithmLab({ customers, usage }) {
               </select>
             </div>
 
-            {invoice && selectedCustomer && selectedPlan ? (
+            {invoiceError ? (
+              <div className="algorithm-empty" role="alert">
+                {invoiceError}
+              </div>
+            ) : invoice && selectedCustomer && selectedPlan ? (
               <>
                 <div className="algorithm-result-grid">
                   <div className="algorithm-result-card">
@@ -608,26 +635,30 @@ function AlgorithmLab({ customers, usage }) {
                 <div className="algorithm-proof">
                   <h4>
                     <CheckCircle2 size={17} />
-                    Structural induction explanation
+                    Structural Induction Explanation
                   </h4>
 
                   <p>
-                    <b>Base case:</b> An empty list has zero requests: T(0) = 0.
+                    <b>Base Case:</b> If the usage record list is empty, there
+                    are no API requests to accumulate. Therefore, T(0) = 0.
                   </p>
 
                   <p>
-                    <b>Inductive hypothesis:</b> Assume the recursive function
-                    correctly calculates the first k records.
+                    <b>Inductive Hypothesis:</b> Assume that the recursive
+                    function correctly calculates the total API requests from
+                    the first k valid usage records.
                   </p>
 
                   <p>
-                    <b>Inductive step:</b> Adding the next record's quantity
-                    gives T(k + 1) = T(k) + qₖ₊₁.
+                    <b>Inductive Step:</b> When another valid usage record is
+                    added, its quantity is added to the previous total: T(k + 1)
+                    = T(k) + qₖ₊₁.
                   </p>
 
                   <p>
-                    Therefore, the recursive definition correctly accumulates
-                    the quantities of all valid API records.
+                    <b>Conclusion:</b> By structural induction, the recursive
+                    definition correctly accumulates the API request quantities
+                    for every finite list of valid usage records.
                   </p>
                 </div>
               </>
@@ -653,8 +684,9 @@ function AlgorithmLab({ customers, usage }) {
               <span>Fundamental Counting Principle</span>
               <strong>N = P × C × M</strong>
               <p>
-                Total possibilities equal the product of the available choices
-                in each independent category.
+                Total possible configurations are calculated by multiplying the
+                number of choices in each category. Compatibility rules are then
+                applied to identify valid configurations.
               </p>
             </div>
 
@@ -740,13 +772,19 @@ function AlgorithmLab({ customers, usage }) {
             </div>
 
             <div className="algorithm-explanation">
-              <h4>Mathematical calculation</h4>
+              <h4>Mathematical Calculation</h4>
 
-              <p>Plans: {planNames.length}</p>
+              <p>
+                <b>Step 1 - Identify the available choices:</b>
+              </p>
 
-              <p>Billing cycles: {BILLING_CYCLES.length}</p>
-
+              <p>Subscription plans: {planNames.length}</p>
+              <p>Billing cycles: {BILLING_CYCLES.length} (Monthly)</p>
               <p>Payment methods: {PAYMENT_METHODS.length}</p>
+
+              <p>
+                <b>Step 2 - Apply the Fundamental Counting Principle:</b>
+              </p>
 
               <strong>
                 {planNames.length} × {BILLING_CYCLES.length} ×{" "}
@@ -755,9 +793,22 @@ function AlgorithmLab({ customers, usage }) {
               </strong>
 
               <p>
-                After applying compatibility rules, {analysis.validCount} valid
-                configurations remain.
+                <b>Step 3 - Apply compatibility rules:</b>
               </p>
+
+              <p>
+                The algorithm checks whether each subscription plan supports the
+                selected payment method. Unsupported combinations are excluded.
+              </p>
+
+              <p>Valid configurations: {analysis.validCount}</p>
+
+              <p>Excluded configurations: {analysis.invalidCount}</p>
+
+              <strong>
+                {analysis.validCount} valid + {analysis.invalidCount} excluded ={" "}
+                {analysis.totalPossible} total configurations
+              </strong>
             </div>
 
             <div className="configuration-results">
